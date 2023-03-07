@@ -2,11 +2,11 @@
 import { Characters, CharactersAPI } from "@/models/interfaces";
 import { useQuery } from "@vue/apollo-composable";
 import gql from "graphql-tag";
-import { ref, reactive, onMounted } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { useRoute } from "vue-router";
 
 let props = reactive({
-  id: "Rick Sanchez",
+  id: "",
 });
 
 let result = ref<Characters>({
@@ -20,7 +20,7 @@ let result = ref<Characters>({
   episode: [],
 });
 
-const { loading, onResult, refetch } = useQuery(
+const { onResult } = useQuery(
   gql`
     query ($id: ID!) {
       character(id: $id) {
@@ -42,7 +42,7 @@ const { loading, onResult, refetch } = useQuery(
 
 onResult((params: CharactersAPI) => {
   if (!params.loading) {
-    const character = params.data.character ;
+    const character = params.data.character;
 
     result.value = character;
   }
@@ -63,7 +63,7 @@ onMounted(() => {
       <div class="episodes-appers">Episodes where it appears:</div>
       <div class="episodes">
         <div class="episode-card" v-for="episodeDetails in result.episode">
-          <div >{{ episodeDetails.episode }}</div>
+          <div>{{ episodeDetails.episode }}</div>
           <div class="name-episode">{{ episodeDetails.name }}</div>
         </div>
       </div>

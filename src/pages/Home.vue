@@ -1,19 +1,19 @@
 <script setup lang="ts">
+import { removeDuplicates } from "@/common/utils/removeDuplicates";
 import Card from "@/components/Card.vue";
+import { Characters, EventWithScroll } from "@/models/interfaces";
 import { useQuery } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import { onMounted, reactive, ref } from "vue";
-import { removeDuplicates } from "@/common/utils/removeDuplicates";
-import { Characters,EventWithScroll } from "@/models/interfaces";
 
 const props = reactive({
   page: 1,
   name: "",
 });
-
 const search = ref("");
-
+const list = ref<HTMLDivElement>({} as HTMLDivElement);
 const loading = ref(false);
+let characters = ref<Characters[]>([]);
 
 const { onResult, refetch } = useQuery(
   gql`
@@ -32,9 +32,6 @@ const { onResult, refetch } = useQuery(
   `,
   props
 );
-
-let characters = ref<Characters[]>([]);
-const list = ref<HTMLDivElement>({} as HTMLDivElement);
 
 function getNextPage() {
   props.page += 1;
